@@ -13,24 +13,29 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String NOT_FOUND = "Not Found";
+    private static final String BAD_REQUEST = "Bad Request";
+    private static final String VALIDATION_FAILED = "Validation failed";
+    private static final String INVALID_REQUEST_PARAMETER = "Invalid request parameter";
+
     @ExceptionHandler(MovieNotFoundException.class)
     public ProblemDetail handleNotFound(MovieNotFoundException ex) {
         var problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setTitle("Not Found");
+        problem.setTitle(NOT_FOUND);
         return problem;
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, HandlerMethodValidationException.class})
     public ProblemDetail handleValidation(Exception ex) {
-        var problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
-        problem.setTitle("Bad Request");
+        var problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, VALIDATION_FAILED);
+        problem.setTitle(BAD_REQUEST);
         return problem;
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, MissingServletRequestParameterException.class})
     public ProblemDetail handleBadRequest(Exception ex) {
-        var problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Invalid request parameter");
-        problem.setTitle("Bad Request");
+        var problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, INVALID_REQUEST_PARAMETER);
+        problem.setTitle(BAD_REQUEST);
         return problem;
     }
 }
